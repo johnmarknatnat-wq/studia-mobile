@@ -1,13 +1,9 @@
 // //layout.tsx
 
-
-
 // import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 // // import * as SplashScreen from 'expo-splash-screen';
 // import { useColorScheme } from 'react-native';
 // import SplashScreen from '@/app/index';
-
-
 
 // // import { AnimatedSplashOverlay } from '@/components/animated-icon';
 // // import AppTabs from '@/components/app-tabs';
@@ -23,7 +19,7 @@
 //     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 //       {/* <AnimatedSplashOverlay /> */}
 //       {/* <AppTabs /> */}
-      
+
 //       {/* ahkdahjhdas */}
 //       {/* <LearnMoreScreen/> */}
 //       <SplashScreen />
@@ -100,17 +96,12 @@
 //   );
 // }
 
-import {
-  Poppins_400Regular,
-  Poppins_600SemiBold,
-  Poppins_700Bold,
-  useFonts,
-} from '@expo-google-fonts/poppins';
-import { SplashScreen, Stack } from 'expo-router';
-import { useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, useFonts } from "@expo-google-fonts/poppins";
+import { SplashScreen, Stack } from "expo-router";
+import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { C } from '@/constants/studia-colors';
+import { C } from "@/constants/studia-colors";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -122,7 +113,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (error) console.warn('Font load failed:', error);
+    if (error) console.warn("Font load failed:", error);
     if (loaded || error) SplashScreen.hideAsync();
   }, [loaded, error]);
 
@@ -133,10 +124,11 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: 'fade',
+          animation: "fade",
           animationDuration: 350,
           contentStyle: { backgroundColor: C.surface },
-        }}>
+        }}
+      >
         <Stack.Screen name="index" />
         <Stack.Screen name="learn-more" />
       </Stack>

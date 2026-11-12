@@ -255,48 +255,22 @@ export default function WelcomeScreen() {
       <StatusBar style="light" />
 
       {/* Layer 1: building photo (decorative) */}
-      <Image
-        source={BUILDING}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        priority="high"
-        accessible={false}
-      />
+      <Image source={BUILDING} style={StyleSheet.absoluteFill} contentFit="cover" priority="high" accessible={false} />
 
       {/* Layer 2: gradient overlay */}
-      <LinearGradient
-        colors={[...SPLASH_GRADIENT.colors]}
-        locations={[...SPLASH_GRADIENT.locations]}
-        style={StyleSheet.absoluteFill}
-      />
+      <LinearGradient colors={[...SPLASH_GRADIENT.colors]} locations={[...SPLASH_GRADIENT.locations]} style={StyleSheet.absoluteFill} />
 
       {/* Layer 3: content */}
-      <View
-        style={[
-          s.safe,
-          { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) + 8 },
-        ]}>
+      <View style={[s.safe, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) + 8 }]}>
         <View style={[s.hero, { marginTop: compact ? 16 : 44 }]}>
           <View style={s.logoRow}>
-            <Image
-              source={LOGO}
-              style={{ width: logoSize, height: logoSize }}
-              contentFit="contain"
-              alt="OMSC logo"
-            />
+            <Image source={LOGO} style={{ width: logoSize, height: logoSize }} contentFit="contain" alt="OMSC logo" />
             <View style={s.logoDivider} />
-            <Image
-              source={STUDIA_LOGO}
-              style={{ width: logoSize, height: logoSize }}
-              contentFit="contain"
-              alt="Studia logo"
-            />
+            <Image source={STUDIA_LOGO} style={{ width: logoSize, height: logoSize }} contentFit="contain" alt="Studia logo" />
           </View>
           <Text style={[s.title, compact && s.titleCompact]}>OMSU</Text>
           <Text style={[s.subtitle, compact && s.subtitleCompact]}>AI-LMS</Text>
-          <Text style={s.tagline}>
-            AI-Powered Mobile Learning{"\n"}Management System
-          </Text>
+          <Text style={s.tagline}>AI-Powered Mobile Learning{"\n"}Management System</Text>
         </View>
 
         <View style={s.mascotWrap}>
@@ -311,12 +285,7 @@ export default function WelcomeScreen() {
             ]}
           />
           {/* Lumiliit kapag maliit ang espasyo, hindi lalampas sa mascotSize */}
-          <Image
-            source={MASCOT}
-            style={{ height: "100%", maxHeight: mascotSize, aspectRatio: 1 }}
-            contentFit="contain"
-            alt="Studia mascot"
-          />
+          <Image source={MASCOT} style={{ height: "100%", maxHeight: mascotSize, aspectRatio: 1 }} contentFit="contain" alt="Studia mascot" />
         </View>
 
         <View style={s.actions}>
