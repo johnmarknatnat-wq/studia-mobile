@@ -96,8 +96,88 @@
 //   );
 // }
 
+//_layout.com
+// import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, useFonts } from "@expo-google-fonts/poppins";
+// import { SplashScreen, Stack } from "expo-router";
+// import { useEffect } from "react";
+// import { StatusBar } from "expo-status-bar";
+// import { SafeAreaProvider } from "react-native-safe-area-context";
+
+// import { C } from "@/constants/studia-colors";
+
+// SplashScreen.preventAutoHideAsync();
+
+// export default function RootLayout() {
+//   const [loaded, error] = useFonts({
+//     Poppins_400Regular,
+//     Poppins_600SemiBold,
+//     Poppins_700Bold,
+//   });
+
+//   useEffect(() => {
+//     if (error) console.warn("Font load failed:", error);
+//     if (loaded || error) SplashScreen.hideAsync();
+//   }, [loaded, error]);
+
+//   if (!loaded && !error) return null;
+
+//   return (
+//     <SafeAreaProvider>
+//       {/* <Stack
+//         screenOptions={{
+//           headerShown: false,
+//           animation: "fade",
+//           animationDuration: 350,
+//           contentStyle: { backgroundColor: C.surface },
+//         }}
+//       >
+//         <Stack.Screen name="index" />
+//         <Stack.Screen name="learn-more" />
+//       </Stack> */}
+//       <StatusBar style="light" />
+//       <Stack
+//         screenOptions={{
+//           headerShown: false,
+//           animation: "fade",
+//           animationDuration: 300,
+//           freezeOnBlur: true,
+//           contentStyle: { backgroundColor: C.lavenderSoft },
+//         }}
+//       >
+//         <Stack.Screen name="index" />
+//         <Stack.Screen name="learn-more" />
+//       </Stack>
+//       {/* <Stack
+//         screenOptions={{
+//           headerShown: false,
+//           animation: "fade",
+//           animationDuration: 300,
+//           // Soft lavender sits between the splash gradient and the learn-more
+//           // surface, so the cross-fade doesn't flash a harsh gray.
+//           contentStyle: { backgroundColor: C.lavenderSoft },
+//         }}
+//       >
+//         <Stack.Screen name="index" />
+//         <Stack.Screen name="learn-more" />
+//       </Stack> */}
+//       {/* <Stack
+//         screenOptions={{
+//           headerShown: false,
+//           animation: "slide_from_right",
+//           animationDuration: 300,
+//           gestureEnabled: true,
+//           contentStyle: { backgroundColor: C.primaryDark },
+//         }}
+//       >
+//         <Stack.Screen name="index" options={{ animation: "fade" }} />
+//         <Stack.Screen name="learn-more" />
+//       </Stack> */}
+//     </SafeAreaProvider>
+//   );
+// }
 import { Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold, useFonts } from "@expo-google-fonts/poppins";
 import { SplashScreen, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -106,11 +186,7 @@ import { C } from "@/constants/studia-colors";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    Poppins_400Regular,
-    Poppins_600SemiBold,
-    Poppins_700Bold,
-  });
+  const [loaded, error] = useFonts({ Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold });
 
   useEffect(() => {
     if (error) console.warn("Font load failed:", error);
@@ -121,12 +197,14 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
           headerShown: false,
           animation: "fade",
-          animationDuration: 350,
-          contentStyle: { backgroundColor: C.surface },
+          animationDuration: 300,
+          freezeOnBlur: true,
+          contentStyle: { backgroundColor: C.lavenderSoft },
         }}
       >
         <Stack.Screen name="index" />
