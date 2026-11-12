@@ -217,6 +217,8 @@
 // });
 // app/index.tsx
 
+// app/index.tsx
+
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -252,7 +254,6 @@ export default function WelcomeScreen() {
     <View style={s.root}>
       <StatusBar style="light" />
 
-<<<<<<< HEAD
       {/* Layer 1: building photo (decorative) */}
       <Image
         source={BUILDING}
@@ -290,21 +291,6 @@ export default function WelcomeScreen() {
               contentFit="contain"
               alt="Studia logo"
             />
-=======
-          <View style={s.actions}>
-            {/* palitan ang route kapag gawa mo na ang login/role screen */}
-            <Pressable style={s.primaryBtn} onPress={() => router.push('/explore')}>
-              <Text style={s.primaryText}>Get Started</Text>
-            </Pressable>
-            <Pressable style={s.secondaryBtn} onPress={() => router.push('/learn-more')}>
-              <Text style={s.secondaryText}>Learn More</Text>
-            </Pressable> {/*<Pressable 
-      style={s.secondaryBtn} 
-      onPress={() => router.push('/learn-more')}
-    >
-      <Text style={s.secondaryText}>Learn More</Text>
-    </Pressable> */}
->>>>>>> 86621011e311bfc0fd9d5b34c6ca099a076c3457
           </View>
           <Text style={[s.title, compact && s.titleCompact]}>OMSU</Text>
           <Text style={[s.subtitle, compact && s.subtitleCompact]}>AI-LMS</Text>
@@ -396,22 +382,4 @@ const s = StyleSheet.create({
   },
 
   actions: { gap: 12 },
-<<<<<<< HEAD
 });
-=======
-  primaryBtn: {
-    backgroundColor: C.primary,
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  primaryText: { color: C.white, fontSize: 16, fontWeight: '700' },
-  secondaryBtn: {
-    backgroundColor: C.lavender,
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  secondaryText: { color: C.primaryDark, fontSize: 16, fontWeight: '700' },
-});
->>>>>>> 86621011e311bfc0fd9d5b34c6ca099a076c3457
