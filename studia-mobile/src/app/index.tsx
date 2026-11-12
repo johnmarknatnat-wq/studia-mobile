@@ -229,10 +229,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppButton } from "@/components/ui/app-button";
 import { C, SPLASH_GRADIENT } from "@/constants/studia-colors";
 
-const BUILDING = require("../../assets/images/omsu.jpg");
-const LOGO = require("../../assets/images/omsc.logo.png");
-const STUDIA_LOGO = require("../../assets/images/studia-mobile-logo.png");
-const MASCOT = require("../../assets/images/studia-mascot.png");
+const BUILDING = require("@/assets/images/omsu.jpg");
+const LOGO = require("@/assets/images/omsc.logo.png");
+const STUDIA_LOGO = require("@/assets/images/studia-mobile-logo.png");
+const MASCOT = require("@/assets/images/studia-mascot.png");
 
 export default function WelcomeScreen() {
   const router = useRouter();

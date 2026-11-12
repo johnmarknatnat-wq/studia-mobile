@@ -209,6 +209,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="learn-more" />
+        <Stack.Screen name="explore" />
       </Stack>
     </SafeAreaProvider>
   );
