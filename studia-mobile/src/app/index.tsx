@@ -1,98 +1,68 @@
-import * as Device from 'expo-device';
-// import { Platform, StyleSheet } from 'react-native';
-// import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { Image, ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+// improt LearnMoreScreen from '@/app/learn-more';
 
-// import { AnimatedIcon } from '@/components/animated-icon';
-// import { HintRow } from '@/components/hint-row';
-// import { ThemedText } from '@/components/themed-text';
-// import { ThemedView } from '@/components/themed-view';
-// import { WebBadge } from '@/components/web-badge';
-// import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+// import {omscLogo} from '@/assets/images/omsc.logo.png';
+// import {omsc} from '@/assets/images/omsu.jpg';
 
-// function getDevMenuHint() {
-//   if (Platform.OS === 'web') {
-//     return <ThemedText type="small">use browser devtools</ThemedText>;
-//   }
-//   if (Device.isDevice) {
-//     return (
-//       <ThemedText type="small">
-//         shake device or press <ThemedText type="code">m</ThemedText> in terminal
-//       </ThemedText>
-//     );
-//   }
-//   const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-//   return (
-//     <ThemedText type="small">
-//       press <ThemedText type="code">{shortcut}</ThemedText>
-//     </ThemedText>
-//   );
-// }
 
-// export default function HomeScreen() {
-//   return (
-//     <ThemedView >
-//       <SafeAreaView >
-//         <ThemedView >
-//           <AnimatedIcon />
-//           <ThemedText type="title" >
-//             Welcome to&nbsp;Expo
-//           </ThemedText>
-//         </ThemedView>
 
-//         <ThemedText type="code">
-//           get started
-//         </ThemedText>
+import { C } from '@/constants/studia-colors';
+import LearnMoreScreen from './learn-more';
 
-//         <ThemedView type="backgroundElement">
-//           <HintRow
-//             title="Try editing"
-//             hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-//           />
-//           <HintRow title="Dev tools" hint={getDevMenuHint()} />
-//           <HintRow
-//             title="Fresh start"
-//             hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-//           />
-//         </ThemedView>
+export default function SplashScreen() {
+  const router = useRouter();
 
-//         {Platform.OS === 'web' && <WebBadge />}
-//       </SafeAreaView>
-//     </ThemedView>
-//   );
-// }
+  return (
+    // <ImageBackground source={require('@/assets/images/omsu.jpg')} style={s.bg} resizeMode="cover">
+    <ImageBackground source={require('../../assets/images/omsu.jpg')} style={s.bg} resizeMode="cover">
+      <View style={s.overlay}>
+        <SafeAreaView style={s.safe}>
+          <View style={s.center}>
+            <Image source={require('../../assets/images/omsc.logo.png')} style={s.logo} />
+            <Text style={s.title}>OMSU</Text>
+            <Text style={s.subtitle}>AI-LMS</Text>
+            <Text style={s.tagline}>AI-Powered Mobile Learning Management System</Text>
+          </View>
 
-// // const styles = StyleSheet.create({
-// //   container: {
-// //     flex: 1,
-// //     justifyContent: 'center',
-// //     flexDirection: 'row',
-// //   },
-// //   safeArea: {
-// //     flex: 1,
-// //     paddingHorizontal: Spacing.four,
-// //     alignItems: 'center',
-// //     gap: Spacing.three,
-// //     paddingBottom: BottomTabInset + Spacing.three,
-// //     maxWidth: MaxContentWidth,
-// //   },
-// //   heroSection: {
-// //     alignItems: 'center',
-// //     justifyContent: 'center',
-// //     flex: 1,
-// //     paddingHorizontal: Spacing.four,
-// //     gap: Spacing.four,
-// //   },
-// //   title: {
-// //     textAlign: 'center',
-// //   },
-// //   code: {
-// //     textTransform: 'uppercase',
-// //   },
-// //   stepContainer: {
-// //     gap: Spacing.three,
-// //     alignSelf: 'stretch',
-// //     paddingHorizontal: Spacing.three,
-// //     paddingVertical: Spacing.four,
-// //     borderRadius: Spacing.four,
-// //   },
-// // });
+          <View style={s.actions}>
+            {/* palitan ang route kapag gawa mo na ang login/role screen */}
+            <Pressable style={s.primaryBtn} onPress={() => router.push('/explore')}>
+              <Text style={s.primaryText}>Get Started</Text>
+            </Pressable>
+            <Pressable style={s.secondaryBtn} onPress={() => router.push('/learn-more')}>
+              <Text style={s.secondaryText}>Learn More</Text>
+            </Pressable>
+          </View>
+        </SafeAreaView>
+      </View>
+    </ImageBackground>
+  );
+}
+
+const s = StyleSheet.create({
+  bg: { flex: 1 },
+  overlay: { flex: 1, backgroundColor: 'rgba(59, 40, 140, 0.88)' },
+  safe: { flex: 1, paddingHorizontal: 24, paddingBottom: 24 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 6 },
+  logo: { width: 130, height: 130, marginBottom: 16 },
+  title: { color: C.white, fontSize: 40, fontWeight: '800' },
+  subtitle: { color: C.lavender, fontSize: 28, fontWeight: '700' },
+  tagline: { color: C.lavender, fontSize: 14, textAlign: 'center', marginTop: 8 },
+  actions: { gap: 12 },
+  primaryBtn: {
+    backgroundColor: C.primary,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  primaryText: { color: C.white, fontSize: 16, fontWeight: '700' },
+  secondaryBtn: {
+    backgroundColor: C.lavender,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  secondaryText: { color: C.primaryDark, fontSize: 16, fontWeight: '700' },
+});
