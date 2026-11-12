@@ -30,20 +30,20 @@ function getDevMenuHint() {
 
 export default function HomeScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
+    <ThemedView >
+      <SafeAreaView >
+        <ThemedView >
           <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
+          <ThemedText type="title" >
             Welcome to&nbsp;Expo
           </ThemedText>
         </ThemedView>
 
-        <ThemedText type="code" style={styles.code}>
+        <ThemedText type="code">
           get started
         </ThemedText>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
+        <ThemedView type="backgroundElement">
           <HintRow
             title="Try editing"
             hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
@@ -61,38 +61,38 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     flexDirection: 'row',
+//   },
+//   safeArea: {
+//     flex: 1,
+//     paddingHorizontal: Spacing.four,
+//     alignItems: 'center',
+//     gap: Spacing.three,
+//     paddingBottom: BottomTabInset + Spacing.three,
+//     maxWidth: MaxContentWidth,
+//   },
+//   heroSection: {
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     flex: 1,
+//     paddingHorizontal: Spacing.four,
+//     gap: Spacing.four,
+//   },
+//   title: {
+//     textAlign: 'center',
+//   },
+//   code: {
+//     textTransform: 'uppercase',
+//   },
+//   stepContainer: {
+//     gap: Spacing.three,
+//     alignSelf: 'stretch',
+//     paddingHorizontal: Spacing.three,
+//     paddingVertical: Spacing.four,
+//     borderRadius: Spacing.four,
+//   },
+// });
