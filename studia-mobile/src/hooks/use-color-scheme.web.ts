@@ -1,21 +1,23 @@
-import { useEffect, useState } from 'react';
-import { useColorScheme as useRNColorScheme } from 'react-native';
+// // hooks/use-color-scheme.web.ts
 
-/**
- * To support static rendering, this value needs to be re-calculated on the client side for web
- */
-export function useColorScheme() {
-  const [hasHydrated, setHasHydrated] = useState(false);
+// import { useEffect, useState } from 'react';
+// import { useColorScheme as useRNColorScheme } from 'react-native';
 
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
+// /**
+//  * To support static rendering, this value needs to be re-calculated on the client side for web
+//  */
+// export function useColorScheme() {
+//   const [hasHydrated, setHasHydrated] = useState(false);
 
-  const colorScheme = useRNColorScheme();
+//   useEffect(() => {
+//     setHasHydrated(true);
+//   }, []);
 
-  if (hasHydrated) {
-    return colorScheme;
-  }
+//   const colorScheme = useRNColorScheme();
 
-  return 'light';
-}
+//   if (hasHydrated) {
+//     return colorScheme;
+//   }
+
+//   return 'light';
+// }
