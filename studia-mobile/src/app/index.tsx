@@ -31,9 +31,14 @@ export default function SplashScreen() {
             <Pressable style={s.primaryBtn} onPress={() => router.push('/explore')}>
               <Text style={s.primaryText}>Get Started</Text>
             </Pressable>
-            <Pressable style={s.secondaryBtn} onPress={() => router.push('/learn-more')}>
+            {/* <Pressable style={s.secondaryBtn} onPress={() => router.push('/learn-more')}>
               <Text style={s.secondaryText}>Learn More</Text>
-            </Pressable>
+            </Pressable> */}<Pressable 
+      style={s.secondaryBtn} 
+      onPress={() => router.push('/learn-more')}
+    >
+      <Text style={s.secondaryText}>Learn More</Text>
+    </Pressable>
           </View>
         </SafeAreaView>
       </View>

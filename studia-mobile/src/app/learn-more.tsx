@@ -131,9 +131,9 @@ export default function LearnMoreScreen() {
           </View>
 
           {/* CTA */}
-          <Pressable style={s.cta} onPress={() => router.back()}>
+          {/* <Pressable style={s.cta} onPress={() => router.back()}>
             <Text style={s.ctaText}>Get Started</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
       </ScrollView>
     </SafeAreaView>
