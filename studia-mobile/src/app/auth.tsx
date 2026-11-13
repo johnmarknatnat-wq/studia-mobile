@@ -1,418 +1,714 @@
-export default function Auth(){
-    // login form for students
-
-    // signin form for students data, name, section, email, number(optional) password
-
-
-    // if the selected is instructor
-    // login and sign in form for instructor
-
-
-    // continue with google account
-    // and forgot password, see password
-
-
-    // use tis color this colorr palette
-    // studia-colors.ts
-
-// export const C = {
-//   primaryDark: '#3B288C',
-//   primary: '#5B46B6',
-//   lavender: '#D6CEFA',
-//   lavenderSoft: '#ECE8FC',
-//   white: '#FFFFFF',
-//   surface: '#F4F5F9',
-//   border: '#E2E4EC',
-//   muted: '#6B7280',
-//   text: '#1F2438',
-//   green: '#38A169',
-//   greenTint: '#DFF2E6',
-//   red: '#E05252',
-//   orange: '#ED8936',
-//   blue: '#3B82F6',
-//   gold: '#F59E0B',
-// };
-
-// /** Splash screen gradient: purple (top) -> white (bottom) */
-// export const SPLASH_GRADIENT = {
-//   colors: [
-//     'rgba(76, 52, 190, 0.88)',
-//     'rgba(98, 75, 215, 0.92)',
-//     'rgba(236, 232, 252, 0.97)',
-//     '#F5F3FF',
-//   ],
-//   locations: [0, 0.5, 0.8, 1],
-// } as const;
-
-// // components/ui/app-button.tsx
-// import { Pressable, StyleSheet, Text, type PressableProps } from "react-native";
-
-// import { C } from "@/constants/studia-colors";
-
-// type Variant = "primary" | "secondary";
-
-// type AppButtonProps = Omit<PressableProps, "children" | "style"> & {
-//   label: string;
-//   variant?: Variant;
-// };
-
-// export function AppButton({ label, variant = "primary", disabled, ...rest }: AppButtonProps) {
-//   return (
-//     <Pressable
-//       accessibilityRole="button"
-//       accessibilityLabel={label}
-//       accessibilityState={{ disabled: !!disabled }}
-//       disabled={disabled}
-//       style={({ pressed }) => [
-//         s.base,
-//         s[variant],
-//         pressed && !disabled && s.pressed,
-//         disabled && s.disabled,
-//       ]}
-//       {...rest}
-//     >
-//       <Text
-//         style={[
-//           s.label,
-//           variant === "primary" ? s.labelPrimary : s.labelSecondary,
-//           disabled && s.labelDisabled,
-//         ]}
-//       >
-//         {label}
-//       </Text>
-//     </Pressable>
-//   );
-// }
-
-// const s = StyleSheet.create({
-//   base: {
-//     borderRadius: 14,
-//     borderWidth: 1, // pareho sa dalawa para pantay ang taas
-//     borderColor: "transparent",
-//     paddingVertical: 16,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   primary: {
-//     backgroundColor: C.primary,
-//     shadowColor: C.primaryDark,
-//     shadowOpacity: 0.3,
-//     shadowRadius: 10,
-//     shadowOffset: { width: 0, height: 4 },
-//     elevation: 4,
-//   },
-//   secondary: {
-//     backgroundColor: C.lavenderSoft,
-//     borderColor: C.lavender,
-//   },
-//   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-//   // Walang opacity dito: sa Android, may lumalabas na parihabang shadow kapag may opacity + elevation.
-//   disabled: {
-//     backgroundColor: C.lavenderSoft,
-//     borderColor: C.lavender,
-//     shadowOpacity: 0,
-//     elevation: 0,
-//   },
-//   label: { fontSize: 16, fontFamily: "Poppins_600SemiBold" },
-//   labelPrimary: { color: C.white },
-//   labelSecondary: { color: C.primaryDark },
-//   labelDisabled: { color: C.muted },
-// });
-
-
-// design it where we can easily integrate database and handle all possible errors that we can encounter, such ass wrong credentials, duplicated account or already existed mismatch, empty field use focous and re for error
-// if maglalagay ka ng error sa header dapat mawawala rin after a few seconds
-// kapag pinindot na yung field dapat mawawala yung focus error
-// include duplicated email in the database
-// otp for email
-// if login with gmail dapat after non mag sesend ng otp sa account
-// after that collect all the data nescesary for the database(kung ano yung kukunin sa create account)
-// password strength checher na mag papakita kapag active ang password field and mawawala kapag strong password
-// before giving me the code check it up for possible security vulnerability, errors, silent errors, redundancy
-// for now use a mock data
-
-
-// itong page na ito ang kasunod nitong 
-// app/explore.tsx
+// // app/auth.tsx
+// // Navigate from explore.tsx with:  router.push({ pathname: "/auth", params: { role } });
 // import { Ionicons } from "@expo/vector-icons";
 // import { Image } from "expo-image";
-// import { useRouter } from "expo-router";
-// import { useEffect, useRef, useState } from "react";
+// import { useLocalSearchParams, useRouter, type Href } from "expo-router";
+// import { createRef, useCallback, useEffect, useRef, useState, type RefObject } from "react";
 // import {
-//   Animated,
-//   Easing,
-//   Modal,
+//   KeyboardAvoidingView,
+//   Platform,
 //   Pressable,
 //   ScrollView,
 //   StyleSheet,
 //   Text,
+//   TextInput,
 //   useWindowDimensions,
 //   View,
 // } from "react-native";
 // import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // import { AppButton } from "@/components/ui/app-button";
+// import { Banner, Field, OtpInput, PasswordMeter, type BannerType } from "@/components/auth/auth-parts";
 // import { C } from "@/constants/studia-colors";
+// import { isOtp, isStrongPassword, validateAll, type FieldErrors, type FieldKey } from "@/lib/auth-validation";
+// import {
+//   completeGoogleProfile,
+//   isAuthError,
+//   login,
+//   loginWithGoogle,
+//   register,
+//   requestPasswordReset,
+//   resendOtp,
+//   resetPassword,
+//   verifyOtp,
+//   type OtpInfo,
+//   type OtpPurpose,
+//   type Role,
+//   type Session,
+// } from "@/services/auth-service";
 
 // const STUDIA_LOGO = require("@/assets/images/studia-mobile-logo.png");
-// const STUDENT_ICON = require("@/assets/images/student.png");
-// const INSTRUCTOR_ICON = require("@/assets/images/instructor.png");
+// const OMSC_LOGO = require("@/assets/images/omsc_logo.png");
 
-// type Role = "student" | "instructor";
+// const BANNER_MS = 4500;
+// const HOME_ROUTE = "/" as Href; // TODO: replace with your home / tabs route
 
-// const ROLES: { id: Role; title: string; desc: string; icon: number }[] = [
-//   {
-//     id: "student",
-//     title: "Student",
-//     desc: "Access your courses, materials, quizzes, and AI learning assistant.",
-//     icon: STUDENT_ICON,
-//   },
-//   {
-//     id: "instructor",
-//     title: "Instructor",
-//     desc: "Manage courses, materials, assessments, and monitor student progress.",
-//     icon: INSTRUCTOR_ICON,
-//   },
-// ];
+// type Mode = "login" | "signup" | "verify" | "forgot" | "reset" | "profile";
+// type Form = Record<FieldKey, string>;
+// type OtpCtx = { email: string; purpose: OtpPurpose };
 
-// // Placeholder copy: ipa-review sa school/DPO bago i-release.
-// const TERMS: { title: string; body: string }[] = [
-//   {
-//     title: "1. Using STUDIA",
-//     body: "STUDIA Mobile is provided by Occidental Mindoro State University – Mamburao Campus for learning and academic activities. Use your own account, keep your login private, and do not upload content you do not have the right to share.",
-//   },
-//   {
-//     title: "2. Information we collect",
-//     body: "We collect your name, school email, role, course enrollments, submissions, quiz results, and app activity so the app can work and your instructors can follow your progress.",
-//   },
-//   {
-//     title: "3. AI features",
-//     body: "Lecture videos, documents, and text you upload may be processed by AI services to create transcripts, summaries, study plans, and quizzes. AI output can contain mistakes, so double-check important details.",
-//   },
-//   {
-//     title: "4. How your data is used",
-//     body: "Your data is used only for academic and app-improvement purposes. We do not sell your personal information. Access is limited to authorized school personnel and the services needed to run the app.",
-//   },
-//   {
-//     title: "5. Your rights",
-//     body: "Under the Data Privacy Act of 2012 (RA 10173), you may ask to access, correct, or request deletion of your personal data. Contact the campus data protection officer for any request.",
-//   },
-//   {
-//     title: "6. Changes",
-//     body: "We may update these terms and the privacy policy. We will notify you in the app when something important changes.",
-//   },
-// ];
+// const EMPTY_FORM: Form = {
+//   fullName: "", section: "", department: "", email: "", phone: "", password: "", confirm: "",
+// };
 
-// export default function ExploreScreen() {
+// const FIELD_ORDER: Record<"signup" | "profile", Record<Role, FieldKey[]>> = {
+//   signup: {
+//     student: ["fullName", "section", "email", "phone", "password", "confirm"],
+//     instructor: ["fullName", "department", "email", "phone", "password", "confirm"],
+//   },
+//   profile: {
+//     student: ["fullName", "section", "phone"],
+//     instructor: ["fullName", "department", "phone"],
+//   },
+// };
+
+// const makeRefs = (): Record<FieldKey, RefObject<TextInput | null>> => ({
+//   fullName: createRef<TextInput>(), section: createRef<TextInput>(), department: createRef<TextInput>(),
+//   email: createRef<TextInput>(), phone: createRef<TextInput>(), password: createRef<TextInput>(),
+//   confirm: createRef<TextInput>(),
+// });
+
+// const OTP_COPY: Record<OtpPurpose, string> = {
+//   signup: "Enter the code we sent to verify your email.",
+//   google_login: "For your security, enter the code we sent to your Google email.",
+//   google_signup: "Verify your Google email to continue.",
+//   reset: "Enter the code to reset your password.",
+// };
+
+// export default function Auth() {
 //   const router = useRouter();
 //   const insets = useSafeAreaInsets();
 //   const { height } = useWindowDimensions();
+//   const params = useLocalSearchParams<{ role?: string }>();
+//   // Never trust the route param blindly: anything that is not "instructor" is a student.
+//   const role: Role = params.role === "instructor" ? "instructor" : "student";
 
-//   // Responsive breakpoints (base sa taas ng screen)
-//   const compact = height < 700; // maliliit na phone / landscape
-//   const tiny = height < 600; // sobrang liit: itatago ang subtitle
+//   const compact = height < 700;
 //   const topPad = insets.top + (compact ? 8 : 14);
 //   const bottomPad = Math.max(insets.bottom, 16) + 8;
 
-//   const [consentOpen, setConsentOpen] = useState(true);
-//   const [agreed, setAgreed] = useState(false);
-//   const [role, setRole] = useState<Role | null>(null);
+//   const [mode, setMode] = useState<Mode>("login");
+//   const [form, setForm] = useState<Form>(EMPTY_FORM);
+//   const [errors, setErrors] = useState<FieldErrors>({});
+//   const [active, setActive] = useState<FieldKey | null>(null);
+//   const [busy, setBusy] = useState(false);
+//   const [banner, setBanner] = useState<{ id: number; type: BannerType; text: string } | null>(null);
 
-//   // 0 = hidden, 1 = shown. Isang value lang ang nagpapagalaw ng backdrop at sheet.
-//   const progress = useRef(new Animated.Value(0)).current;
+//   const [otp, setOtp] = useState("");
+//   const [otpError, setOtpError] = useState<string | undefined>();
+//   const [otpCtx, setOtpCtx] = useState<OtpCtx | null>(null);
+//   const [devCode, setDevCode] = useState<string | null>(null);
+//   const [resendIn, setResendIn] = useState(0);
+//   const [profileToken, setProfileToken] = useState<string | null>(null);
+//   const [resetToken, setResetToken] = useState<string | null>(null);
+
+//   const refs = useRef(makeRefs()).current;
+//   const otpRef = useRef<TextInput>(null);
+//   const busyRef = useRef(false);
+//   const mounted = useRef(true);
+//   const bannerTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 //   useEffect(() => {
-//     Animated.timing(progress, {
-//       toValue: 1,
-//       duration: 360,
-//       easing: Easing.out(Easing.cubic),
-//       useNativeDriver: true,
-//     }).start();
-//   }, [progress]);
+//     mounted.current = true;
+//     return () => {
+//       mounted.current = false;
+//       if (bannerTimer.current) clearTimeout(bannerTimer.current);
+//     };
+//   }, []);
 
-//   const closeSheet = (onDone: () => void) => {
-//     Animated.timing(progress, {
-//       toValue: 0,
-//       duration: 260,
-//       easing: Easing.in(Easing.cubic),
-//       useNativeDriver: true,
-//     }).start(({ finished }) => {
-//       if (finished) onDone();
-//     });
+//   /* ---------- helpers ---------- */
+
+//   const showBanner = useCallback((type: BannerType, text: string) => {
+//     if (bannerTimer.current) clearTimeout(bannerTimer.current);
+//     setBanner({ id: Date.now(), type, text });
+//     bannerTimer.current = setTimeout(() => {
+//       if (mounted.current) setBanner(null);
+//     }, BANNER_MS);
+//   }, []);
+
+//   const setField = (key: FieldKey, value: string) => {
+//     setForm((f) => ({ ...f, [key]: key === "section" ? value.toUpperCase() : value }));
+//     setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e)); // typing also clears the error
 //   };
 
-//   // Hindi na kailangan ng `if (!agreed)` guard: disabled na ang button hangga't hindi naka-check.
-//   const handleAgree = () => closeSheet(() => setConsentOpen(false));
+//   const clearError = (key: FieldKey) => setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
 
-//   const handleDecline = () => {
-//     closeSheet(() => {
-//       setConsentOpen(false);
-//       router.back();
-//     });
+//   const applyErrors = (errs: FieldErrors, order: FieldKey[]) => {
+//     setErrors(errs);
+//     const first = order.find((k) => errs[k]);
+//     if (first) refs[first].current?.focus();
 //   };
 
-//   const handleContinue = () => {
-//     if (!role) return;
-//     // TODO: palitan kapag gawa na ang login/register screen
-//     // router.push({ pathname: "/login", params: { role } });
-//     console.log("Selected role:", role);
+//   const goMode = (next: Mode) => {
+//     setMode(next);
+//     setErrors({});
+//     setOtp("");
+//     setOtpError(undefined);
+//     setActive(null);
+//     setForm((f) => ({ ...f, password: "", confirm: "" })); // never keep secrets between screens
 //   };
 
-//   const translateY = progress.interpolate({
-//     inputRange: [0, 1],
-//     outputRange: [height * 0.6, 0],
+//   const bind = (key: FieldKey) => ({
+//     ref: refs[key],
+//     value: form[key],
+//     error: errors[key],
+//     onChangeText: (v: string) => setField(key, v),
+//     onClearError: () => clearError(key),
+//     onFocus: () => setActive(key),
+//     onBlur: () => setActive((cur) => (cur === key ? null : cur)),
 //   });
 
-//   const ctaLabel = role ? `Continue as ${role}` : "Select role";
+//   const next = (key: FieldKey) => () => refs[key].current?.focus();
+
+//   const handleError = (e: unknown) => {
+//     if (!isAuthError(e)) {
+//       showBanner("error", "Something went wrong. Please try again."); // no internals leaked to the UI
+//       return;
+//     }
+//     if (__DEV__) console.warn("[auth]", e.code); // code only: never log emails, passwords or OTPs
+
+//     if (e.fields) applyErrors(e.fields, FIELD_ORDER.signup[role]);
+
+//     if (e.code === "OTP_INVALID" || e.code === "OTP_LOCKED") {
+//       setOtpError(e.message);
+//       setOtp("");
+//       setTimeout(() => otpRef.current?.focus(), 50);
+//     } else if (e.code === "OTP_EXPIRED" && mode === "verify") {
+//       setOtpError(e.message);
+//       setOtp("");
+//       setResendIn(0);
+//     }
+//     if (e.code === "EMAIL_NOT_VERIFIED") {
+//       void sendVerificationAgain();
+//       return;
+//     }
+//     if (e.code === "ACCOUNT_PENDING") goMode("login");
+//     showBanner("error", e.message);
+//   };
+
+//   /** Single-flight wrapper: blocks double taps and never updates state after unmount. */
+//   const guard = async (fn: () => Promise<void>) => {
+//     if (busyRef.current) return;
+//     busyRef.current = true;
+//     setBusy(true);
+//     try {
+//       await fn();
+//     } catch (e) {
+//       if (mounted.current) handleError(e);
+//     } finally {
+//       busyRef.current = false;
+//       if (mounted.current) setBusy(false);
+//     }
+//   };
+
+//   const onAuthenticated = (session: Session) => {
+//     // TODO: persist session.accessToken with expo-secure-store (never AsyncStorage), then navigate.
+//     router.replace(HOME_ROUTE);
+//     void session;
+//   };
+
+//   const startOtp = (email: string, purpose: OtpPurpose, info: OtpInfo, message?: string) => {
+//     setOtpCtx({ email, purpose });
+//     setDevCode(info.devCode ?? null);
+//     setResendIn(info.resendInSec);
+//     goMode("verify");
+//     showBanner("info", message ?? `We sent a 6-digit code to ${email}.`);
+//     setTimeout(() => otpRef.current?.focus(), 300);
+//   };
+
+//   /* ---------- actions ---------- */
+
+//   const submitLogin = () =>
+//     guard(async () => {
+//       const errs = validateAll(["email", "password"], form, { role, strict: false });
+//       if (Object.keys(errs).length) {
+//         applyErrors(errs, ["email", "password"]);
+//         showBanner("error", "Please fix the highlighted fields.");
+//         return;
+//       }
+//       onAuthenticated(await login({ email: form.email, password: form.password, role }));
+//     });
+
+//   const sendVerificationAgain = async () => {
+//     try {
+//       const info = await resendOtp(form.email, "signup");
+//       if (mounted.current) startOtp(form.email.trim().toLowerCase(), "signup", info);
+//     } catch (e) {
+//       if (mounted.current) handleError(e);
+//     }
+//   };
+
+//   const submitSignup = () =>
+//     guard(async () => {
+//       const keys = FIELD_ORDER.signup[role];
+//       const errs = validateAll(keys, form, { role });
+//       if (Object.keys(errs).length) {
+//         applyErrors(errs, keys);
+//         showBanner("error", "Please fix the highlighted fields.");
+//         return;
+//       }
+//       const res = await register({
+//         role,
+//         fullName: form.fullName,
+//         email: form.email,
+//         password: form.password,
+//         section: form.section,
+//         department: form.department,
+//         phone: form.phone,
+//       });
+//       startOtp(res.email, "signup", res);
+//     });
+
+//   const submitGoogle = () =>
+//     guard(async () => {
+//       const res = await loginWithGoogle(role);
+//       startOtp(res.email, res.purpose, res);
+//     });
+
+//   const submitOtp = (code: string) =>
+//     guard(async () => {
+//       if (!otpCtx) return;
+//       if (!isOtp(code)) {
+//         setOtpError("Enter the 6-digit code.");
+//         return;
+//       }
+//       const res = await verifyOtp({ email: otpCtx.email, purpose: otpCtx.purpose, code });
+//       if (res.kind === "session") {
+//         onAuthenticated(res.session);
+//       } else if (res.kind === "needs_profile") {
+//         setProfileToken(res.profileToken);
+//         goMode("profile");
+//         setForm((f) => ({ ...f, fullName: res.fullName, email: otpCtx.email }));
+//         showBanner("success", "Email verified. Complete your profile to finish.");
+//       } else {
+//         setResetToken(res.resetToken);
+//         goMode("reset");
+//         showBanner("success", "Code verified. Set your new password.");
+//       }
+//     });
+
+//   const submitResend = () =>
+//     guard(async () => {
+//       if (!otpCtx || resendIn > 0) return;
+//       const info = await resendOtp(otpCtx.email, otpCtx.purpose);
+//       setDevCode(info.devCode ?? null);
+//       setResendIn(info.resendInSec);
+//       setOtp("");
+//       setOtpError(undefined);
+//       showBanner("success", "A new code was sent.");
+//     });
+
+//   const submitProfile = () =>
+//     guard(async () => {
+//       const keys = FIELD_ORDER.profile[role];
+//       const errs = validateAll(keys, form, { role });
+//       if (Object.keys(errs).length || !profileToken) {
+//         applyErrors(errs, keys);
+//         showBanner("error", "Please fix the highlighted fields.");
+//         return;
+//       }
+//       onAuthenticated(
+//         await completeGoogleProfile({
+//           profileToken,
+//           role,
+//           fullName: form.fullName,
+//           section: form.section,
+//           department: form.department,
+//           phone: form.phone,
+//         }),
+//       );
+//     });
+
+//   const submitForgot = () =>
+//     guard(async () => {
+//       const errs = validateAll(["email"], form, { role });
+//       if (errs.email) {
+//         applyErrors(errs, ["email"]);
+//         showBanner("error", errs.email);
+//         return;
+//       }
+//       const info = await requestPasswordReset(form.email);
+//       // Same message whether or not the account exists.
+//       startOtp(
+//         form.email.trim().toLowerCase(),
+//         "reset",
+//         info,
+//         "If an account exists for that email, we sent a 6-digit code.",
+//       );
+//     });
+
+//   const submitReset = () =>
+//     guard(async () => {
+//       const errs = validateAll(["password", "confirm"], form, { role });
+//       if (Object.keys(errs).length || !resetToken) {
+//         applyErrors(errs, ["password", "confirm"]);
+//         showBanner("error", "Please fix the highlighted fields.");
+//         return;
+//       }
+//       await resetPassword({ resetToken, newPassword: form.password });
+//       setResetToken(null);
+//       goMode("login");
+//       showBanner("success", "Password updated. You can log in now.");
+//     });
+
+//   /* ---------- timers / navigation ---------- */
+
+//   useEffect(() => {
+//     if (resendIn <= 0) return;
+//     const t = setTimeout(() => setResendIn((n) => n - 1), 1000);
+//     return () => clearTimeout(t);
+//   }, [resendIn]);
+
+//   const goBack = () => {
+//     if (busy) return;
+//     switch (mode) {
+//       case "verify":
+//         goMode(otpCtx?.purpose === "signup" ? "signup" : otpCtx?.purpose === "reset" ? "forgot" : "login");
+//         break;
+//       case "forgot":
+//       case "reset":
+//       case "profile":
+//         goMode("login");
+//         break;
+//       default:
+//         router.back();
+//     }
+//   };
+
+//   /* ---------- render ---------- */
+
+//   const HERO: Record<Mode, { title: string; sub: string }> = {
+//     login: { title: "Welcome back", sub: `Log in to your ${role} account.` },
+//     signup: { title: "Create account", sub: `Sign up as ${role === "student" ? "a student" : "an instructor"}.` },
+//     verify: { title: "Verify your email", sub: OTP_COPY[otpCtx?.purpose ?? "signup"] },
+//     forgot: { title: "Forgot password?", sub: "Enter your email and we will send you a code." },
+//     reset: { title: "New password", sub: "Choose a strong password you have not used before." },
+//     profile: { title: "Almost done", sub: "Tell us a bit more so your account is ready." },
+//   };
+
+//   const showMeter = active === "password" && !isStrongPassword(form.password);
+//   const roleField: FieldKey = role === "student" ? "section" : "department";
+//   const hero = HERO[mode];
+
+//   const roleFieldNode = (
+//     <Field
+//       {...bind(roleField)}
+//       label={role === "student" ? "Section" : "Department"}
+//       placeholder={role === "student" ? "e.g. BSIT 3-A" : "e.g. College of Computing"}
+//       autoCapitalize={role === "student" ? "characters" : "words"}
+//       maxLength={role === "student" ? 20 : 80}
+//       returnKeyType="next"
+//       onSubmitEditing={next(mode === "profile" ? "phone" : "email")}
+//     />
+//   );
+
+//   const phoneNode = (last: boolean) => (
+//     <Field
+//       {...bind("phone")}
+//       label="Mobile number"
+//       optional
+//       placeholder="09123456789"
+//       keyboardType="phone-pad"
+//       autoComplete="tel"
+//       textContentType="telephoneNumber"
+//       maxLength={16}
+//       returnKeyType={last ? "done" : "next"}
+//       onSubmitEditing={last ? submitProfile : next("password")}
+//     />
+//   );
+
+//   const emailNode = (last: boolean, onDone: () => void) => (
+//     <Field
+//       {...bind("email")}
+//       label="Email"
+//       placeholder="you@school.edu.ph"
+//       keyboardType="email-address"
+//       autoCapitalize="none"
+//       autoCorrect={false}
+//       autoComplete="email"
+//       textContentType="emailAddress"
+//       maxLength={254}
+//       returnKeyType={last ? "done" : "next"}
+//       onSubmitEditing={last ? onDone : next(mode === "login" ? "password" : "phone")}
+//     />
+//   );
 
 //   return (
 //     <View style={s.root}>
-//       {/* Hero */}
-//       <View style={[s.hero, { paddingTop: topPad, paddingBottom: compact ? 24 : 36 }]}>
-//         <View style={s.blobA} />
-//         <View style={s.blobB} />
+//       {banner ? <Banner key={banner.id} type={banner.type} text={banner.text} top={insets.top + 8} /> : null}
 
-//         <Pressable
-//           onPress={() => router.back()}
-//           hitSlop={12}
-//           style={[s.back, { top: topPad }]}
-//           accessibilityRole="button"
-//           accessibilityLabel="Go back"
+//       <KeyboardAvoidingView style={s.flex} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+//         <ScrollView
+//           style={s.flex}
+//           contentContainerStyle={s.scrollContent}
+//           keyboardShouldPersistTaps="handled"
+//           showsVerticalScrollIndicator={false}
+//           bounces={false}
+//           overScrollMode="never"
 //         >
-//           <Ionicons name="chevron-back" size={22} color={C.white} />
-//         </Pressable>
-
-//         <View style={[s.logoRing, compact && s.logoRingCompact]}>
-//           <Image
-//             source={STUDIA_LOGO}
-//             style={[s.logo, compact && s.logoCompact]}
-//             contentFit="contain"
-//             alt="Studia logo"
-//           />
-//         </View>
-//         <Text style={[s.heroTitle, compact && s.heroTitleCompact]}>Choose account type</Text>
-//         {!tiny && <Text style={s.heroSub}>Select the role that matches how you will use STUDIA.</Text>}
-//       </View>
-
-//       {/* Role cards */}
-//       <ScrollView
-//         style={s.list}
-//         contentContainerStyle={s.listContent}
-//         showsVerticalScrollIndicator={false}
-//         bounces={false}
-//         overScrollMode="never"
-//       >
-//         {ROLES.map((r) => {
-//           const selected = role === r.id;
-//           return (
+//           {/* Hero */}
+//           <View style={[s.hero, { paddingTop: topPad, paddingBottom: compact ? 22 : 30 }]}>
+//             <View style={s.blobA} />
+//             <View style={s.blobB} />
 //             <Pressable
-//               key={r.id}
-//               onPress={() => setRole(r.id)}
-//               accessibilityRole="radio"
-//               accessibilityState={{ selected }}
-//               accessibilityLabel={`${r.title}. ${r.desc}`}
-//               style={({ pressed }) => [
-//                 s.roleCard,
-//                 compact && s.roleCardCompact,
-//                 selected && s.roleCardActive,
-//                 pressed && s.roleCardPressed,
-//               ]}
+//               onPress={goBack}
+//               hitSlop={12}
+//               style={[s.back, { top: topPad }]}
+//               accessibilityRole="button"
+//               accessibilityLabel="Go back"
 //             >
-//               <View style={[s.roleIcon, compact && s.roleIconCompact, selected && s.roleIconActive]}>
-//                 <Image
-//                   source={r.icon}
-//                   style={[s.roleIconImg, compact && s.roleIconImgCompact]}
-//                   contentFit="contain"
-//                   accessible={false}
+//               <Ionicons name="chevron-back" size={22} color={C.white} />
+//             </Pressable>
+//             <View style={[s.logoRing, compact && s.logoRingCompact]}>
+//               <Image source={STUDIA_LOGO} style={[s.logo, compact && s.logoCompact]} contentFit="contain" alt="Studia logo" />
+//             </View>
+//             <Text style={[s.heroTitle, compact && s.heroTitleCompact]}>{hero.title}</Text>
+//             <Text style={s.heroSub}>{hero.sub}</Text>
+//           </View>
+
+//           {/* Card */}
+//           <View style={s.card}>
+//             {mode === "login" || mode === "signup" ? (
+//               <View style={s.tabs} accessibilityRole="tablist">
+//                 {(["login", "signup"] as const).map((m) => (
+//                   <Pressable
+//                     key={m}
+//                     disabled={busy}
+//                     onPress={() => goMode(m)}
+//                     style={[s.tab, mode === m && s.tabActive]}
+//                     accessibilityRole="tab"
+//                     accessibilityState={{ selected: mode === m }}
+//                   >
+//                     <Text style={[s.tabText, mode === m && s.tabTextActive]}>
+//                       {m === "login" ? "Log in" : "Sign up"}
+//                     </Text>
+//                   </Pressable>
+//                 ))}
+//               </View>
+//             ) : null}
+
+//             {/* LOGIN */}
+//             {mode === "login" ? (
+//               <>
+//                 {emailNode(false, submitLogin)}
+//                 <Field
+//                   {...bind("password")}
+//                   label="Password"
+//                   secure
+//                   placeholder="Your password"
+//                   autoCapitalize="none"
+//                   autoCorrect={false}
+//                   autoComplete="current-password"
+//                   textContentType="password"
+//                   maxLength={64}
+//                   returnKeyType="done"
+//                   onSubmitEditing={submitLogin}
 //                 />
-//               </View>
-//               <View style={s.roleText}>
-//                 <Text style={s.roleTitle}>{r.title}</Text>
-//                 <Text style={s.roleDesc}>{r.desc}</Text>
-//               </View>
-//               <View style={[s.radio, selected && s.radioActive]}>
-//                 {selected && <Ionicons name="checkmark" size={14} color={C.white} />}
-//               </View>
-//             </Pressable>
-//           );
-//         })}
-//       </ScrollView>
+//                 <Pressable onPress={() => goMode("forgot")} hitSlop={8} style={s.linkRight} accessibilityRole="button">
+//                   <Text style={s.link}>Forgot password?</Text>
+//                 </Pressable>
+//                 <AppButton label={busy ? "Please wait…" : "Log in"} onPress={submitLogin} disabled={busy} />
+//               </>
+//             ) : null}
 
-//       {/* CTA */}
-//       <View style={[s.footer, { paddingBottom: bottomPad }]}>
-//         <AppButton label={ctaLabel} onPress={handleContinue} disabled={!role} />
-//       </View>
+//             {/* SIGNUP */}
+//             {mode === "signup" ? (
+//               <>
+//                 <Field
+//                   {...bind("fullName")}
+//                   label="Full name"
+//                   placeholder="Juan Dela Cruz"
+//                   autoCapitalize="words"
+//                   autoComplete="name"
+//                   textContentType="name"
+//                   maxLength={80}
+//                   returnKeyType="next"
+//                   onSubmitEditing={next(roleField)}
+//                 />
+//                 {roleFieldNode}
+//                 {emailNode(false, submitSignup)}
+//                 {phoneNode(false)}
+//                 <Field
+//                   {...bind("password")}
+//                   label="Password"
+//                   secure
+//                   placeholder="Create a password"
+//                   autoCapitalize="none"
+//                   autoCorrect={false}
+//                   autoComplete="new-password"
+//                   textContentType="newPassword"
+//                   maxLength={64}
+//                   returnKeyType="next"
+//                   onSubmitEditing={next("confirm")}
+//                 />
+//                 {showMeter ? <PasswordMeter password={form.password} /> : null}
+//                 <Field
+//                   {...bind("confirm")}
+//                   label="Confirm password"
+//                   secure
+//                   placeholder="Re-enter your password"
+//                   autoCapitalize="none"
+//                   autoCorrect={false}
+//                   autoComplete="new-password"
+//                   textContentType="newPassword"
+//                   maxLength={64}
+//                   returnKeyType="done"
+//                   onSubmitEditing={submitSignup}
+//                 />
+//                 <AppButton label={busy ? "Please wait…" : "Create account"} onPress={submitSignup} disabled={busy} />
+//               </>
+//             ) : null}
 
-//       {/* Terms & privacy sheet */}
-//       <Modal
-//         visible={consentOpen}
-//         transparent
-//         animationType="none"
-//         statusBarTranslucent
-//         onRequestClose={handleDecline}
-//       >
-//         <View style={s.modalRoot}>
-//           <Animated.View style={[StyleSheet.absoluteFill, s.backdrop, { opacity: progress }]} />
-
-//           <Animated.View
-//             style={[
-//               s.sheet,
-//               {
-//                 maxHeight: height * (compact ? 0.94 : 0.86),
-//                 paddingBottom: bottomPad,
-//                 transform: [{ translateY }],
-//               },
-//             ]}
-//           >
-//             <View style={s.handle} />
-
-//             {!compact && (
-//               <View style={s.sheetBadge}>
-//                 <Ionicons name="shield-checkmark" size={26} color={C.primary} />
-//               </View>
-//             )}
-//             <Text style={s.sheetTitle}>Terms and privacy</Text>
-//             {!compact && <Text style={s.sheetSub}>Please review before creating your account.</Text>}
-
-//             <ScrollView style={s.termsBox} contentContainerStyle={s.termsContent} showsVerticalScrollIndicator>
-//               {TERMS.map((t) => (
-//                 <View key={t.title} style={s.termBlock}>
-//                   <Text style={s.termTitle}>{t.title}</Text>
-//                   <Text style={s.termBody}>{t.body}</Text>
+//             {/* GOOGLE (login + signup only) */}
+//             {mode === "login" || mode === "signup" ? (
+//               <>
+//                 <View style={s.divider}>
+//                   <View style={s.dividerLine} />
+//                   <Text style={s.dividerText}>or</Text>
+//                   <View style={s.dividerLine} />
 //                 </View>
-//               ))}
-//             </ScrollView>
+//                 <Pressable
+//                   onPress={submitGoogle}
+//                   disabled={busy}
+//                   accessibilityRole="button"
+//                   accessibilityLabel="Continue with Google"
+//                   style={({ pressed }) => [s.google, pressed && !busy && { opacity: 0.85 }, busy && { opacity: 0.6 }]}
+//                 >
+//                   <Ionicons name="logo-google" size={18} color={C.text} />
+//                   <Text style={s.googleText}>Continue with Google</Text>
+//                 </Pressable>
+//                 <Text style={s.switchText}>
+//                   {mode === "login" ? "New to STUDIA? " : "Already have an account? "}
+//                   <Text style={s.link} onPress={() => !busy && goMode(mode === "login" ? "signup" : "login")}>
+//                     {mode === "login" ? "Create an account" : "Log in"}
+//                   </Text>
+//                 </Text>
+//               </>
+//             ) : null}
 
-//             <Pressable
-//               onPress={() => setAgreed((v) => !v)}
-//               style={s.checkRow}
-//               accessibilityRole="checkbox"
-//               accessibilityState={{ checked: agreed }}
-//             >
-//               <View style={[s.checkbox, agreed && s.checkboxActive]}>
-//                 {agreed && <Ionicons name="checkmark" size={16} color={C.white} />}
-//               </View>
-//               <Text style={s.checkText}>
-//                 I have read and agree to the Terms and Conditions and the Privacy Policy.
-//               </Text>
-//             </Pressable>
+//             {/* VERIFY OTP */}
+//             {mode === "verify" ? (
+//               <>
+//                 <View style={s.mailBadge}>
+//                   <Ionicons name="mail-open" size={26} color={C.primary} />
+//                 </View>
+//                 <Text style={s.centerText}>
+//                   Code sent to <Text style={s.bold}>{otpCtx?.email}</Text>
+//                 </Text>
+//                 <OtpInput
+//                   ref={otpRef}
+//                   value={otp}
+//                   onChange={(v) => {
+//                     setOtp(v);
+//                     if (otpError) setOtpError(undefined);
+//                   }}
+//                   onComplete={submitOtp}
+//                   onClearError={() => setOtpError(undefined)}
+//                   error={otpError}
+//                   disabled={busy}
+//                 />
+//                 <AppButton
+//                   label={busy ? "Verifying…" : "Verify"}
+//                   onPress={() => submitOtp(otp)}
+//                   disabled={busy || otp.length !== 6}
+//                 />
+//                 <View style={s.resendRow}>
+//                   <Text style={s.muted}>Did not get it? </Text>
+//                   <Pressable onPress={submitResend} disabled={busy || resendIn > 0} hitSlop={8} accessibilityRole="button">
+//                     <Text style={[s.link, resendIn > 0 && { color: C.muted }]}>
+//                       {resendIn > 0 ? `Resend in ${resendIn}s` : "Resend code"}
+//                     </Text>
+//                   </Pressable>
+//                 </View>
+//                 {__DEV__ && devCode ? (
+//                   <View style={s.devBox}>
+//                     <Text style={s.devText}>DEV ONLY (mock): your code is {devCode}</Text>
+//                   </View>
+//                 ) : null}
+//               </>
+//             ) : null}
 
-//             <AppButton label="Agree and continue" onPress={handleAgree} disabled={!agreed} />
+//             {/* FORGOT */}
+//             {mode === "forgot" ? (
+//               <>
+//                 {emailNode(true, submitForgot)}
+//                 <AppButton label={busy ? "Please wait…" : "Send code"} onPress={submitForgot} disabled={busy} />
+//               </>
+//             ) : null}
 
-//             <Pressable onPress={handleDecline} hitSlop={8} style={s.decline} accessibilityRole="button">
-//               <Text style={s.declineText}>Decline</Text>
-//             </Pressable>
-//           </Animated.View>
-//         </View>
-//       </Modal>
+//             {/* RESET */}
+//             {mode === "reset" ? (
+//               <>
+//                 <Field
+//                   {...bind("password")}
+//                   label="New password"
+//                   secure
+//                   placeholder="Create a new password"
+//                   autoCapitalize="none"
+//                   autoCorrect={false}
+//                   autoComplete="new-password"
+//                   textContentType="newPassword"
+//                   maxLength={64}
+//                   returnKeyType="next"
+//                   onSubmitEditing={next("confirm")}
+//                 />
+//                 {showMeter ? <PasswordMeter password={form.password} /> : null}
+//                 <Field
+//                   {...bind("confirm")}
+//                   label="Confirm new password"
+//                   secure
+//                   placeholder="Re-enter your password"
+//                   autoCapitalize="none"
+//                   autoCorrect={false}
+//                   autoComplete="new-password"
+//                   textContentType="newPassword"
+//                   maxLength={64}
+//                   returnKeyType="done"
+//                   onSubmitEditing={submitReset}
+//                 />
+//                 <AppButton label={busy ? "Please wait…" : "Update password"} onPress={submitReset} disabled={busy} />
+//               </>
+//             ) : null}
+
+//             {/* GOOGLE PROFILE (new Google accounts, after OTP) */}
+//             {mode === "profile" ? (
+//               <>
+//                 <View style={s.emailChip}>
+//                   <Ionicons name="logo-google" size={16} color={C.primary} />
+//                   <Text style={s.emailChipText} numberOfLines={1}>{form.email}</Text>
+//                   <Ionicons name="checkmark-circle" size={16} color={C.green} />
+//                 </View>
+//                 <Field
+//                   {...bind("fullName")}
+//                   label="Full name"
+//                   autoCapitalize="words"
+//                   autoComplete="name"
+//                   maxLength={80}
+//                   returnKeyType="next"
+//                   onSubmitEditing={next(roleField)}
+//                 />
+//                 {roleFieldNode}
+//                 {phoneNode(true)}
+//                 <AppButton label={busy ? "Please wait…" : "Finish setup"} onPress={submitProfile} disabled={busy} />
+//               </>
+//             ) : null}
+//           </View>
+
+//           <View style={[s.footer, { paddingBottom: bottomPad }]}>
+//             <Image source={OMSC_LOGO} style={s.footerLogo} contentFit="contain" accessible={false} />
+//             <Text style={s.footerText}>Occidental Mindoro State University – Mamburao Campus</Text>
+//           </View>
+//         </ScrollView>
+//       </KeyboardAvoidingView>
 //     </View>
 //   );
 // }
 
 // const s = StyleSheet.create({
+//   flex: { flex: 1 },
 //   root: { flex: 1, backgroundColor: C.surface },
+//   scrollContent: { flexGrow: 1 },
 
-//   /* Hero (same language as learn-more) */
 //   hero: {
 //     backgroundColor: C.primaryDark,
 //     alignItems: "center",
@@ -420,200 +716,66 @@ export default function Auth(){
 //     borderBottomLeftRadius: 36,
 //     borderBottomRightRadius: 36,
 //     overflow: "hidden",
-//     gap: 8,
+//     gap: 6,
 //   },
-//   blobA: {
-//     position: "absolute",
-//     width: 240,
-//     height: 240,
-//     borderRadius: 120,
-//     backgroundColor: C.primary,
-//     opacity: 0.45,
-//     top: -90,
-//     right: -70,
-//   },
-//   blobB: {
-//     position: "absolute",
-//     width: 170,
-//     height: 170,
-//     borderRadius: 85,
-//     backgroundColor: C.lavender,
-//     opacity: 0.12,
-//     bottom: -60,
-//     left: -50,
-//   },
+//   blobA: { position: "absolute", width: 240, height: 240, borderRadius: 120, backgroundColor: C.primary, opacity: 0.45, top: -90, right: -70 },
+//   blobB: { position: "absolute", width: 170, height: 170, borderRadius: 85, backgroundColor: C.lavender, opacity: 0.12, bottom: -60, left: -50 },
 //   back: {
-//     position: "absolute",
-//     left: 16,
-//     width: 38,
-//     height: 38,
-//     borderRadius: 19,
-//     backgroundColor: "rgba(255,255,255,0.16)",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     zIndex: 2,
+//     position: "absolute", left: 16, width: 38, height: 38, borderRadius: 19,
+//     backgroundColor: "rgba(255,255,255,0.16)", alignItems: "center", justifyContent: "center", zIndex: 2,
 //   },
 //   logoRing: {
-//     width: 84,
-//     height: 84,
-//     borderRadius: 42,
-//     backgroundColor: "rgba(255,255,255,0.12)",
-//     borderWidth: 1,
-//     borderColor: "rgba(255,255,255,0.25)",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     marginTop: 8,
+//     width: 76, height: 76, borderRadius: 38, backgroundColor: "rgba(255,255,255,0.12)",
+//     borderWidth: 1, borderColor: "rgba(255,255,255,0.25)", alignItems: "center", justifyContent: "center", marginTop: 6,
 //   },
-//   logoRingCompact: { width: 64, height: 64, borderRadius: 32, marginTop: 4 },
-//   logo: { width: 60, height: 60 },
-//   logoCompact: { width: 44, height: 44 },
-//   heroTitle: {
-//     color: C.white,
-//     fontSize: 26,
-//     lineHeight: 34,
-//     fontFamily: "Poppins_700Bold",
-//     textAlign: "center",
-//     marginTop: 6,
-//   },
-//   heroTitleCompact: { fontSize: 22, lineHeight: 30, marginTop: 2 },
-//   heroSub: {
-//     color: C.lavender,
-//     fontSize: 13.5,
-//     lineHeight: 20,
-//     fontFamily: "Poppins_400Regular",
-//     textAlign: "center",
-//     maxWidth: 320,
-//   },
+//   logoRingCompact: { width: 58, height: 58, borderRadius: 29, marginTop: 2 },
+//   logo: { width: 54, height: 54 },
+//   logoCompact: { width: 40, height: 40 },
+//   heroTitle: { color: C.white, fontSize: 24, lineHeight: 32, fontFamily: "Poppins_700Bold", textAlign: "center", marginTop: 4 },
+//   heroTitleCompact: { fontSize: 21, lineHeight: 28 },
+//   heroSub: { color: C.lavender, fontSize: 13, lineHeight: 19, fontFamily: "Poppins_400Regular", textAlign: "center", maxWidth: 320 },
 
-//   /* Role cards */
-//   list: { flex: 1 },
-//   listContent: { padding: 20, gap: 14, width: "100%", maxWidth: 560, alignSelf: "center" },
-//   roleCard: {
-//     flexDirection: "row",
-//     alignItems: "center",
-//     gap: 14,
-//     padding: 16,
-//     borderRadius: 20,
-//     backgroundColor: C.white,
-//     borderWidth: 1.5,
-//     borderColor: C.border,
-//   },
-//   roleCardCompact: { padding: 12, gap: 12 },
-//   roleCardActive: { backgroundColor: C.lavenderSoft, borderColor: C.primary },
-//   roleCardPressed: { opacity: 0.92, transform: [{ scale: 0.985 }] },
-//   roleIcon: {
-//     width: 68,
-//     height: 68,
-//     borderRadius: 18,
-//     backgroundColor: C.lavenderSoft,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   roleIconCompact: { width: 56, height: 56, borderRadius: 16 },
-//   roleIconActive: { backgroundColor: C.white },
-//   roleIconImg: { width: 46, height: 46 },
-//   roleIconImgCompact: { width: 38, height: 38 },
-//   roleText: { flex: 1, gap: 2 },
-//   roleTitle: { color: C.text, fontSize: 17, fontFamily: "Poppins_700Bold" },
-//   roleDesc: { color: C.muted, fontSize: 12.5, lineHeight: 18, fontFamily: "Poppins_400Regular" },
-//   radio: {
-//     width: 24,
-//     height: 24,
-//     borderRadius: 12,
-//     borderWidth: 2,
-//     borderColor: C.border,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   radioActive: { backgroundColor: C.primary, borderColor: C.primary },
+//   card: { width: "100%", maxWidth: 560, alignSelf: "center", padding: 22, gap: 14 },
 
-//   footer: {
-//     paddingHorizontal: 24,
-//     paddingTop: 12,
-//     width: "100%",
-//     maxWidth: 608,
-//     alignSelf: "center",
-//   },
+//   tabs: { flexDirection: "row", padding: 4, borderRadius: 14, backgroundColor: C.lavenderSoft },
+//   tab: { flex: 1, alignItems: "center", paddingVertical: 10, borderRadius: 11 },
+//   tabActive: { backgroundColor: C.white },
+//   tabText: { color: C.muted, fontSize: 13.5, fontFamily: "Poppins_600SemiBold" },
+//   tabTextActive: { color: C.primaryDark },
 
-//   /* Consent sheet */
-//   modalRoot: { flex: 1, justifyContent: "flex-end" },
-//   backdrop: { backgroundColor: "rgba(31,36,56,0.55)" },
-//   sheet: {
-//     backgroundColor: C.white,
-//     borderTopLeftRadius: 28,
-//     borderTopRightRadius: 28,
-//     paddingHorizontal: 22,
-//     paddingTop: 10,
-//     gap: 12,
-//     width: "100%",
-//     maxWidth: 560,
-//     alignSelf: "center",
-//   },
-//   handle: {
-//     alignSelf: "center",
-//     width: 42,
-//     height: 4,
-//     borderRadius: 2,
-//     backgroundColor: C.border,
-//     marginBottom: 4,
-//   },
-//   sheetBadge: {
-//     alignSelf: "center",
-//     width: 52,
-//     height: 52,
-//     borderRadius: 16,
-//     backgroundColor: C.lavenderSoft,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   sheetTitle: {
-//     color: C.text,
-//     fontSize: 20,
-//     lineHeight: 28,
-//     fontFamily: "Poppins_700Bold",
-//     textAlign: "center",
-//   },
-//   sheetSub: {
-//     color: C.muted,
-//     fontSize: 13,
-//     lineHeight: 19,
-//     fontFamily: "Poppins_400Regular",
-//     textAlign: "center",
-//     marginTop: -6,
-//   },
-//   termsBox: {
-//     flexGrow: 0,
-//     flexShrink: 1,
-//     minHeight: 110,
-//     backgroundColor: C.surface,
-//     borderRadius: 16,
-//     borderWidth: 1,
-//     borderColor: C.border,
-//   },
-//   termsContent: { padding: 16, gap: 14 },
-//   termBlock: { gap: 3 },
-//   termTitle: { color: C.text, fontSize: 13.5, fontFamily: "Poppins_600SemiBold" },
-//   termBody: { color: C.muted, fontSize: 12.5, lineHeight: 19, fontFamily: "Poppins_400Regular" },
+//   linkRight: { alignSelf: "flex-end", marginTop: -4 },
+//   link: { color: C.primary, fontSize: 13, fontFamily: "Poppins_600SemiBold" },
 
-//   checkRow: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 4 },
-//   checkbox: {
-//     width: 24,
-//     height: 24,
-//     borderRadius: 7,
-//     borderWidth: 2,
-//     borderColor: C.primary,
-//     alignItems: "center",
-//     justifyContent: "center",
+//   divider: { flexDirection: "row", alignItems: "center", gap: 12 },
+//   dividerLine: { flex: 1, height: 1, backgroundColor: C.border },
+//   dividerText: { color: C.muted, fontSize: 12.5, fontFamily: "Poppins_400Regular" },
+//   google: {
+//     flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10, paddingVertical: 15,
+//     borderRadius: 14, borderWidth: 1, borderColor: C.border, backgroundColor: C.white,
 //   },
-//   checkboxActive: { backgroundColor: C.primary },
-//   checkText: {
-//     flex: 1,
-//     color: C.text,
-//     fontSize: 12.5,
-//     lineHeight: 18,
-//     fontFamily: "Poppins_400Regular",
+//   googleText: { color: C.text, fontSize: 15, fontFamily: "Poppins_600SemiBold" },
+
+//   switchText: { color: C.muted, fontSize: 13, textAlign: "center", fontFamily: "Poppins_400Regular" },
+
+//   mailBadge: {
+//     alignSelf: "center", width: 56, height: 56, borderRadius: 18, backgroundColor: C.lavenderSoft,
+//     alignItems: "center", justifyContent: "center",
 //   },
-//   decline: { alignSelf: "center", paddingVertical: 6 },
-//   declineText: { color: C.muted, fontSize: 13.5, fontFamily: "Poppins_600SemiBold" },
+//   centerText: { color: C.muted, fontSize: 13, textAlign: "center", fontFamily: "Poppins_400Regular" },
+//   bold: { color: C.text, fontFamily: "Poppins_600SemiBold" },
+//   resendRow: { flexDirection: "row", justifyContent: "center", alignItems: "center" },
+//   muted: { color: C.muted, fontSize: 13, fontFamily: "Poppins_400Regular" },
+//   devBox: { padding: 10, borderRadius: 12, borderWidth: 1, borderStyle: "dashed", borderColor: C.orange, backgroundColor: "#FFF6EC" },
+//   devText: { color: C.orange, fontSize: 12, textAlign: "center", fontFamily: "Poppins_600SemiBold" },
+
+//   emailChip: {
+//     flexDirection: "row", alignItems: "center", gap: 8, padding: 12, borderRadius: 14,
+//     backgroundColor: C.lavenderSoft, borderWidth: 1, borderColor: C.lavender,
+//   },
+//   emailChipText: { flex: 1, color: C.text, fontSize: 13.5, fontFamily: "Poppins_600SemiBold" },
+
+//   footer: { alignItems: "center", gap: 8, paddingTop: 8, paddingHorizontal: 24, marginTop: "auto" },
+//   footerLogo: { width: 34, height: 34 },
+//   footerText: { color: C.muted, fontSize: 11.5, textAlign: "center", fontFamily: "Poppins_400Regular" },
 // });
-}
+
